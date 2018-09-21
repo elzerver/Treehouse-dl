@@ -67,22 +67,22 @@ def get_themes(category_name):
         try:
             category_page = sess.get(category_url, headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'})
         except Exception as e:
-            print(str(e))
-            print('Max Retries Exceeded, wait 5 sec')
+            # print(str(e))
+            # print('Max Retries Exceeded, wait 5 sec')
             time.sleep(5)
             continue
     category_page = BeautifulSoup(category_page.text, "html.parser")
 
     themes = category_page.select('li.card')
-
+    
     themes_items = [
-        {
-            "theme_name": theme.find('h3').text,
-            "theme_type": theme.find('strong').text.strip(),
-            "theme_level": theme.select('.difficulty')[0].text.strip() if theme.select('.difficulty') else '' ,
-            "theme_url": BASE_URL + theme.select('a.title')[0]['href']
-        }
-        for theme in themes]
+         {
+             "theme_name": theme.find('h3').text,
+             "theme_type": theme.find('strong').text.strip(),
+             "theme_level": theme.select('.difficulty')[0].text.strip() if theme.select('.difficulty') else '' ,
+             "theme_url": BASE_URL + theme.select('.card-box')[0]['href']
+         }
+         for theme in themes]
 
     for key, theme in enumerate(themes_items):
         url = theme['theme_url']
@@ -153,7 +153,8 @@ def parse_video_page(link):
     print ("Opening link", link)
     video_page = BeautifulSoup(sess.get(link).text, "html.parser")
     video_meta = video_page.select('#video-meta')[0]
-    download_tab = video_page.select('#downloads-tab-content')[0]
+    video_meta = video_page.select('#video-meta')
+    download_tab = video_page.select('#downloads-tab-content')
     links = download_tab.select('a')
     video_links = {}
     for link in links:
