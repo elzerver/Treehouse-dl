@@ -74,19 +74,33 @@ def get_themes(category_name):
     category_page = BeautifulSoup(category_page.text, "html.parser")
 
     themes = category_page.select('li.card')
+    # theme_items[] = {}
+
+    # for theme in themes:
+    #     theme_items.update(dict({'theme_name': theme.find('h3').text}))
+    #     theme_items.update(dict({'theme_type': theme.find('strong').text.strip()}))
+    #     if theme.select('.difficulty'):
+    #       theme_items.update(dict({'theme_level': theme.select('.difficulty')[0].text.strip()}))
+    #     else:
+    #         ''
+    #     theme_items.update(dict({'theme_url':  BASE_URL + theme.select('.card-box')[0]['href']}))
+
+    # print(theme_items)    
+
+    # sys.exit(0)
     
     themes_items = [
          {
              "theme_name": theme.find('h3').text,
              "theme_type": theme.find('strong').text.strip(),
-             "theme_level": theme.select('.difficulty')[0].text.strip() if theme.select('.difficulty') else '' ,
+             "theme_level": theme.select('.difficulty')[0].text.strip() if theme.select('.difficulty') else '',
              "theme_url": BASE_URL + theme.select('.card-box')[0]['href']
          }
          for theme in themes]
 
     for key, theme in enumerate(themes_items):
         url = theme['theme_url']
-        description = BeautifulSoup(http_get(url)).find('div', 'hero-meta', "html.parser")
+        description = BeautifulSoup(http_get(url), 'html.parser').find('div', 'hero-meta', "html.parser")
         themes_items[key]['theme_description'] = description
 
     return themes_items
