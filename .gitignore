@@ -130,3 +130,7 @@ dmypy.json
 
 # Remove vscode dir
 *.vscode
+
+
+# remove config.py
+config.py
